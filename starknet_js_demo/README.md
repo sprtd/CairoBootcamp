@@ -4,7 +4,7 @@
 
 `cd src`
 
-`npm install --legacy-peers-deps`
+`npm install --legacy-peer-deps`
 
 `npm start`
 

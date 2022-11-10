@@ -199,11 +199,11 @@ func mint{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}(to: f
     // increase counter state by newly increased count value
     counter.write(new_token_id);
 
-    // mint new NFT
-    ERC721._mint(to, new_token_id);
-
     // assign og owner's token_id to the recipient of NFT
     og_owner.write(new_token_id, to);
+
+      // mint new NFT
+    ERC721._mint(to, new_token_id);
     return ();
 }
 

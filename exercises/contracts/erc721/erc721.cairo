@@ -7,10 +7,22 @@ from starkware.cairo.common.uint256 import Uint256, uint256_add, uint256_signed_
 from openzeppelin.access.ownable import Ownable
 from openzeppelin.introspection.ERC165 import ERC165
 from openzeppelin.token.erc721.library import ERC721
+from openzeppelin.security.safemath import SafeUint256
+// from starkware.cairo.common.uint256 import Uint256, uint256_add, uint256_signed_le
+
 
 //
 // Constructor
 //
+
+@storage_var
+func counter() -> (res: Uint256) {
+}
+
+
+@storage_var
+func og_owner(tokenId: Uint256) -> (addr: felt) {
+}
 
 @constructor
 func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -24,6 +36,13 @@ func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 //
 // Getters
 //
+
+@view
+func getCounter{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+)  -> (res: Uint256){
+    let (count: Uint256) = counter.read(); 
+    return (res = count);
+}
 
 @view
 func supportsInterface{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -91,6 +110,15 @@ func owner{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() ->
     return (owner,);
 }
 
+
+@view 
+func getOriginalOwner{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(tokenId: Uint256) -> (prev_owner: felt) {
+    // get owner of nft
+    let (current_owner) = og_owner.read(tokenId);
+    return (prev_owner=current_owner);
+
+}
+
 //
 // Externals
 //
@@ -127,13 +155,6 @@ func safeTransferFrom{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_chec
     return ();
 }
 
-@external
-func mint{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}(to: felt, new_token_id: Uint256) {
-    Ownable.assert_only_owner();
-
-    ERC721._mint(to, new_token_id);
-    return ();
-}
 
 @external
 func burn{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}(tokenId: Uint256) {
@@ -164,3 +185,25 @@ func renounceOwnership{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
     Ownable.renounce_ownership();
     return ();
 }
+
+
+@external
+func mint{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}(to: felt) {
+    Ownable.assert_only_owner();
+    // get counter
+    let (count: Uint256) = getCounter(); 
+
+    // increase count by 1
+    let (new_token_id, carry) =  uint256_add(count, Uint256(1, 0));
+
+    // increase counter state by newly increased count value
+    counter.write(new_token_id);
+
+    // mint new NFT
+    ERC721._mint(to, new_token_id);
+
+    // assign og owner's token_id to the recipient of NFT
+    og_owner.write(new_token_id, to);
+    return ();
+}
+

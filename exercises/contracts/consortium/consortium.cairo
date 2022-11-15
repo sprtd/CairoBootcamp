@@ -1,7 +1,7 @@
 %lang starknet
 from starkware.cairo.common.cairo_builtins import HashBuiltin, BitwiseBuiltin
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
-from starkware.cairo.common.math import unsigned_div_rem, assert_le_felt, assert_le, assert_nn
+from starkware.cairo.common.math import unsigned_div_rem, assert_le_felt, assert_le, assert_nn, assert_not_zero
 from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.pow import pow
@@ -96,12 +96,30 @@ func answered(consortium_idx: felt, proposal_idx: felt, member_addr: felt) -> (t
 
 @external
 func create_consortium{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
-
+    // get caller
     let (caller) = get_caller_address();
+    with_attr error_message("{caller} cannot be zero address") {
+        assert_not_zero(caller);
+    }
+
+    // get index
     let (c_idx) = consortium_idx.read(); 
+    with_attr error_message("{c_idx} must be 0") {
+        assert 0 = c_idx;
+    }
+
+    // create new consortium_struct
     let consortium_struct = Consortium(chairperson=caller, proposal_count=0);
+
+    // add consortium_struct to consortiums storage map
     consortiums.write(c_idx, consortium_struct);
+
+    // create new members_struct
     let members_struct = Member(votes=0, prop=TRUE, ans=0);
+
+    // create a members mapping of mapping 
+    // that maps a consortium index and caller to members_struct
+    // c_idx -> caller -> members_struct
     members.write(c_idx, caller, members_struct);
     consortium_idx.write(c_idx + 1);
     return ();

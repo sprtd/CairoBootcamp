@@ -96,80 +96,91 @@ func answered(consortium_idx: felt, proposal_idx: felt, member_addr: felt) -> (t
 
 @external
 func create_consortium{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
-    
+
+    let (caller) = get_caller_address();
+    let (c_idx) = consortium_idx.read(); 
+    let consortium_struct = Consortium(chairperson=caller, proposal_count=0);
+    consortiums.write(c_idx, consortium_struct);
+    let members_struct = Member(votes=0, prop=TRUE, ans=0);
+    members.write(c_idx, caller, members_struct);
+    consortium_idx.write(c_idx + 1);
     return ();
 }
 
-@external
-func add_proposal{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    consortium_idx: felt,
-    title_len: felt,
-    title: felt*,
-    link_len: felt,
-    link: felt*,
-    ans_len: felt,
-    ans: felt*,
-    type: felt,
-    deadline: felt,
-) {
+// @external
+// func add_proposal{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+//     consortium_idx: felt,
+//     title_len: felt,
+//     title: felt*,
+//     link_len: felt,
+//     link: felt*,
+//     ans_len: felt,
+//     ans: felt*,
+//     type: felt,
+//     deadline: felt,
+// ) {
 
-    return ();
-}
+//     return ();
+// }
 
-@external
-func add_member{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    consortium_idx: felt, member_addr: felt, prop: felt, ans: felt, votes: felt
-) {
+// @external
+// func add_member{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+//     consortium_idx: felt, member_addr: felt, prop: felt, ans: felt, votes: felt
+// ) {
 
-    return ();
-}
+//     return ();
+// }
 
-@external
-func add_answer{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    consortium_idx: felt, proposal_idx: felt, string_len: felt, string: felt*
-) {
+// @external
+// func add_answer{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+//     consortium_idx: felt, proposal_idx: felt, string_len: felt, string: felt*
+// ) {
 
-    return ();
-}
+//     return ();
+// }
 
-@external
-func vote_answer{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    consortium_idx: felt, proposal_idx: felt, answer_idx: felt
-) {
+// @external
+// func vote_answer{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+//     consortium_idx: felt, proposal_idx: felt, answer_idx: felt
+// ) {
 
-    return ();
-}
+//     return ();
+// }
 
-@external
-func tally{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    consortium_idx: felt, proposal_idx: felt
-) -> (win_idx: felt) {
+// @external
+// func tally{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+//     consortium_idx: felt, proposal_idx: felt
+// ) -> (win_idx: felt) {
 
-    return (winner_idx,);
-}
-
-
-// Internal functions
-//#########################################################################################
+//     return (winner_idx,);
+// }
 
 
-func find_highest{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    consortium_idx: felt, proposal_idx: felt, highest: felt, idx: felt, countdown: felt
-) -> (idx: felt) {
 
-    return (idx,);    
-}
+// // Internal functions
+// //#########################################################################################
 
-// Loads it based on length, internall calls only
-func load_selector{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    string_len: felt,
-    string: felt*,
-    slot_idx: felt,
-    proposal_idx: felt,
-    consortium_idx: felt,
-    selector: felt,
-    offset: felt,
-) {
 
-    return ();
-}
+// func find_highest{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+//     consortium_idx: felt, proposal_idx: felt, highest: felt, idx: felt, countdown: felt
+// ) -> (idx: felt) {
+
+//     return (idx,);    
+// }
+
+// // Loads it based on length, internall calls only
+// func load_selector{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+//     string_len: felt,
+//     string: felt*,
+//     slot_idx: felt,
+//     proposal_idx: felt,
+//     consortium_idx: felt,
+//     selector: felt,
+//     offset: felt,
+// ) {
+
+//     return ();
+// }
+
+
+

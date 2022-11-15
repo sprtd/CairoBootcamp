@@ -8,7 +8,6 @@ from openzeppelin.access.ownable import Ownable
 from openzeppelin.introspection.ERC165 import ERC165
 from openzeppelin.token.erc721.library import ERC721
 from openzeppelin.security.safemath import SafeUint256
-// from starkware.cairo.common.uint256 import Uint256, uint256_add, uint256_signed_le
 
 
 //
@@ -115,7 +114,7 @@ func owner{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() ->
 func getOriginalOwner{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(tokenId: Uint256) -> (prev_owner: felt) {
     // get owner of nft
     let (current_owner) = og_owner.read(tokenId);
-    return (prev_owner=current_owner);
+    return (current_owner, );
 
 }
 

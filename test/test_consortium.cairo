@@ -3,7 +3,7 @@ from exercises.contracts.consortium.consortium import (
     // vote_answer,
     // answered,
     // proposals_idx,
-    // add_member,
+    add_member,
     // add_answer,
     // load_selector,
     // proposals_answers,
@@ -69,36 +69,36 @@ func test_create_consortium{
     return ();
 }
 
-// @external
-// func test_add_member{
-//     syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr, bitwise_ptr: BitwiseBuiltin*
-// }() {
-//     %{ stop_prank_callable = start_prank(ids.Addr_1) %}
-//     create_consortium();
-//     %{ stop_prank_callable() %}
+@external
+func test_add_member{
+    syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr, bitwise_ptr: BitwiseBuiltin*
+}() {
+    %{ stop_prank_callable = start_prank(ids.Addr_1) %}
+    create_consortium();
+    %{ stop_prank_callable() %}
 
-//     // Add Addr_2 to consortium as Addr_1
-//     %{ stop_prank_callable = start_prank(ids.Addr_1) %}
-//     add_member(0, Addr_2, FALSE, 1, 50);
-//     %{ stop_prank_callable() %}
+    // Add Addr_2 to consortium as Addr_1
+    %{ stop_prank_callable = start_prank(ids.Addr_1) %}
+    add_member(0, Addr_2, FALSE, 1, 50);
+    %{ stop_prank_callable() %}
 
-//     // Check that Addr_2 added to members array with right parameters
-//     let (mem) = members.read(0, Addr_2);
-//     %{ print(f"\nmem.prop: {ids.mem.prop} \n") %}
-//     %{ print(f"\nmem.votes: {ids.mem.votes} \n") %}
+    // Check that Addr_2 added to members array with right parameters
+    let (mem) = members.read(0, Addr_2);
+    %{ print(f"\nmem.prop: {ids.mem.prop} \n") %}
+    %{ print(f"\nmem.votes: {ids.mem.votes} \n") %}
 
-//     assert FALSE = mem.prop; // member can not submit proposals
-//     assert TRUE = mem.ans;  // member can submit answers to proposals
-//     assert 50 = mem.votes;
+    assert FALSE = mem.prop; // member can not submit proposals
+    assert TRUE = mem.ans;  // member can submit answers to proposals
+    assert 50 = mem.votes;
 
-//     // Reverts if Addr_2 tries adding member
-//     %{ stop_prank_callable = start_prank(ids.Addr_2) %}
-//     %{ expect_revert() %}
-//     add_member(0, Addr_2, 0, 0, 50);
-//     %{ stop_prank_callable() %}
+    // Reverts if Addr_2 tries adding member
+    %{ stop_prank_callable = start_prank(ids.Addr_2) %}
+    %{ expect_revert() %}
+    add_member(0, Addr_2, 0, 0, 50);
+    %{ stop_prank_callable() %}
 
-//     return ();
-// }
+    return ();
+}
 
 // @external
 // func test_add_proposal{

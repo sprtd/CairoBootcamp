@@ -3,6 +3,7 @@ from starkware.cairo.common.uint256 import Uint256, uint256_sub
 from starkware.starknet.common.syscalls import get_caller_address
 from starkware.cairo.common.cairo_builtins import BitwiseBuiltin, HashBuiltin
 from starkware.cairo.common.math import assert_not_equal
+from exercises.contracts.erc721.erc721 import renounceOwnership
 
 const MINT_ADMIN = 0x00348f5537be66815eb7de63295fcb5d8b8b2ffe09bb712af4966db7cbb04a91;
 const TEST_ACC1 = 0x00348f5537be66815eb7de63295fcb5d8b8b2ffe09bb712af4966db7cbb04a95;
@@ -80,3 +81,4 @@ func test_og_owner{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_p
 
     return ();
 }
+

@@ -121,6 +121,8 @@ func create_consortium{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
     // that maps a consortium index and caller to members_struct
     // c_idx -> caller -> members_struct
     members.write(c_idx, caller, members_struct);
+
+    // increase consortium counter by 1
     consortium_idx.write(c_idx + 1);
     return ();
 }
@@ -141,13 +143,32 @@ func create_consortium{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
 //     return ();
 // }
 
-// @external
-// func add_member{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-//     consortium_idx: felt, member_addr: felt, prop: felt, ans: felt, votes: felt
-// ) {
+@external
+func add_member{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    consortium_idx: felt, member_addr: felt, prop: felt, ans: felt, votes: felt
+) {
+    let (caller) = get_caller_address();
+    with_attr error_message("{caller} cannot be zero address") {
+        assert_not_zero(caller);
+    }
+    with_attr error_message("{member_addr} cannot be zero address") {
+        assert_not_zero(member_addr);
+    }
+    // read consortiums struct
+    let (c_struct) = consortiums.read(consortium_idx);
 
-//     return ();
-// }
+    with_attr error_message("{caller} not authorized to add member") {
+        assert caller = c_struct.chairperson;
+    }
+     // create new members_struct
+    let members_struct = Member(votes=votes, prop=prop, ans=ans);
+
+    // create a members mapping of mapping 
+    // that maps a consortium_idx and member_addr as keys to store members_struct
+    // consortium_idx -> member_addr -> members_struct
+    members.write(consortium_idx, member_addr, members_struct);
+    return ();
+}
 
 // @external
 // func add_answer{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(

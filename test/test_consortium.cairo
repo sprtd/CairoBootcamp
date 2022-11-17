@@ -100,55 +100,55 @@ func test_add_member{
     return ();
 }
 
-// @external
-// func test_add_proposal{
-//     syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr, bitwise_ptr: BitwiseBuiltin*
-// }() {
-//     alloc_locals;
+@external
+func test_add_proposal{
+    syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr, bitwise_ptr: BitwiseBuiltin*
+}() {
+    alloc_locals;
 
-//     %{ stop_prank_callable = start_prank(ids.Addr_1) %}
-//     create_consortium();
-//     %{ stop_prank_callable() %}
+    %{ stop_prank_callable = start_prank(ids.Addr_1) %}
+    create_consortium();
+    %{ stop_prank_callable() %}
 
-//     // Check proposal counter set to zero
-//     let (prop_idx) = proposals_idx.read(0);
-//     assert 0 = prop_idx;
+    // Check proposal counter set to zero
+    let (prop_idx) = proposals_idx.read(0);
+    assert 0 = prop_idx;
 
-//     let (local title: felt*) = alloc();
-//     assert title[0] = 'What is the best fruit?';
+    let (local title: felt*) = alloc();
+    assert title[0] = 'What is the best fruit?';
 
-//     let (local link: felt*) = alloc();
+    let (local link: felt*) = alloc();
 
-//     let (local answers: felt*) = alloc();
-//     assert answers[0] = 'Blueberry';
-//     assert answers[1] = 'Mango';
-//     assert answers[2] = 'Avocado';
+    let (local answers: felt*) = alloc();
+    assert answers[0] = 'Blueberry';
+    assert answers[1] = 'Mango';
+    assert answers[2] = 'Avocado';
 
-//     %{ stop_prank_callable = start_prank(ids.Addr_1) %}
-//     add_proposal(0, 1, title, 0, link, 3, answers, 1, 0);
-//     %{ stop_prank_callable() %}
+    %{ stop_prank_callable = start_prank(ids.Addr_1) %}
+    add_proposal(0, 1, title, 0, link, 3, answers, 1, 0);
+    %{ stop_prank_callable() %}
 
-//     // Check title stored correctly
-//     let (t0) = proposals_title.read(0, 0, 0);
-//     assert 'What is the best fruit?' = t0;
+    // Check title stored correctly
+    let (t0) = proposals_title.read(0, 0, 0);
+    assert 'What is the best fruit?' = t0;
 
-//     // Check correct proposal type
-//     let (proposal) = proposals_idx.read(0);
+    // Check correct proposal type
+    let (proposal) = proposals_idx.read(0);
 
-//     // Check answers stored correctly
-//     let (a0) = proposals_answers.read(0, 0, 0);
-//     assert 'Blueberry' = a0.text;
-//     let (a1) = proposals_answers.read(0, 0, 1);
-//     assert 'Mango' = a1.text;
-//     let (a2) = proposals_answers.read(0, 0, 2);
-//     assert 'Avocado' = a2.text;
+    // Check answers stored correctly
+    let (a0) = proposals_answers.read(0, 0, 0);
+    assert 'Blueberry' = a0.text;
+    let (a1) = proposals_answers.read(0, 0, 1);
+    assert 'Mango' = a1.text;
+    let (a2) = proposals_answers.read(0, 0, 2);
+    assert 'Avocado' = a2.text;
 
-//     // Check proposal counter incremented
-//     let (prop_idx) = proposals_idx.read(0);
-//     assert 1 = prop_idx;
+    // Check proposal counter incremented
+    let (prop_idx) = proposals_idx.read(0);
+    assert 1 = prop_idx;
 
-//     return ();
-// }
+    return ();
+}
 
 // @external
 // func test_add_answers{

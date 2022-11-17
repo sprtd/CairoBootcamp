@@ -127,21 +127,46 @@ func create_consortium{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
     return ();
 }
 
-// @external
-// func add_proposal{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-//     consortium_idx: felt,
-//     title_len: felt,
-//     title: felt*,
-//     link_len: felt,
-//     link: felt*,
-//     ans_len: felt,
-//     ans: felt*,
-//     type: felt,
-//     deadline: felt,
-// ) {
+@external
+func add_proposal{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    consortium_idx: felt,
+    title_len: felt,
+    title: felt*,
+    link_len: felt,
+    link: felt*,
+    ans_len: felt,
+    ans: felt*,
+    type: felt,
+    deadline: felt,
+) {
+    let (caller) = get_caller_address(); 
 
-//     return ();
-// }
+
+
+    proposals(consortium_idx: felt, proposal_idx: felt) -> (win_idx: Proposal)
+    // members(consortium_idx: felt, member_addr: felt) 
+
+    let (members_struct) = members(consortium_idx, caller);
+
+    
+    with_attr error_message("{members_struct.prop} cannot be false" ) {
+        assert members_struct.prop = TRUE;
+    }
+    // proposals_idx(consortium_idx: felt) -> (idx: felt)
+    let (proposal_idx) = proposals_idx.read(consortium_idx);
+    // proposals(consortium_idx: felt, proposal_idx: felt) -> (win_idx: Proposal)
+    proposals.write(consortium_idx, proposal_idx);
+
+
+
+
+    let (proposal_struct) = Proposal(type=type, win_idx= consortium_idx, ans_idx= ans_len, deadline=deadline, over=);
+    // proposals_idx(consortium_idx: felt) -> (idx: felt)
+    // proposals.write(consortium_idx, )
+    // let (consortium_idx) = proposals.read(proposal_idx);
+
+    return ();
+}
 
 @external
 func add_member{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
